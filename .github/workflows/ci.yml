@@ -1,0 +1,38 @@
+
+name: CI/CD Pipeline
+
+# Configuración de eventos que disparan el pipeline
+on:
+  push:
+    branches:
+      - main  # Se ejecuta al hacer push a la rama main
+  pull_request:
+    branches:
+      - main  # También se ejecuta en pull requests hacia main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Usar un entorno Ubuntu para el pipeline
+
+    steps:
+    - name: Checkout code  # Descargar el código del repositorio
+      uses: actions/checkout@v2
+
+    - name: Set up Python  # Configurar la versión de Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies  # Instalar dependencias desde requirements.txt
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run tests  # Ejecutar pruebas con pytest
+      run: |
+        pytest test_scraper.py
+
+    - name: Lint with flake8  # Validar el estilo de código con flake8
+      run: |
+        pip install flake8
+        flake8 .
+    
